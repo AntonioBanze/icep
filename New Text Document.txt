@@ -1,0 +1,73 @@
+https://teams.microsoft.com/l/meetup-join/19%3ameeting_Mzk2NzU0ODItMDI2My00ZDdkLWFlMjMtYzJjZjgxMmZiOWJm%40thread.v2/0?context=%7b%22Tid%22%3a%223df74539-9453-4d03-bb9d-b9102cb9ce9c%22%2c%22Oid%22%3a%2231ed7b90-0792-4e1b-937f-57cbeb24e0a4%22%7d
+
+
+
+//creating database connection
+
+const db=mysql.createConnection({host:'localhost',user:'root',password:'',database:'covid_complience_db',port:'3306'})
+
+//check the database  connection
+
+db.connect(err=>{
+    if(err) {
+        console.log(err,'dberr');}
+        else{
+            console.log('database connected.....');
+        }
+    
+
+});
+ 
+// update multiple  
+app.put('/user/:User_id',(req,res)=>{ 
+    console.log(req.body,'updatedata');
+
+    let Id=req.params.User_id;
+    let First_name=req.body.First_name;
+    let Last_name=req.body.Last_name;
+    let Gender=req.body.Gender;
+    let Type=req.body.Type;
+    let Cellphone_number=req.body.Cellphone_number;
+    let Email=req.body.Email;
+    let Password=req.body.Password;
+
+    let qr = `update user set First_name ='${First_name}',Last_name='${Last_name}',Gender='&{Gender}',Type='${Type}',Cellphone_number='${Cellphone_number}',Email='${Email}',Password='${Password}' WHERE User_id ='${Id}'`;
+
+    db.query(qr,(err,result)=>{
+        if(err){console.log(err);}
+
+        res.send({
+            message:'date updated'
+        });
+    });
+   })
+ 
+   // get single data
+
+   app.get('/user/:User_id',(req,res)=>{
+    let gID = req.params.User_id;
+    
+    let qr = `select * from user where User_id = '${gID}'`;
+    
+    db.query(qr,(err,result)=>{
+    
+    if(err){console.log(err);}
+    
+    if(result.length>0)
+       {
+        res.send({
+            message:'get single data',
+            data:result
+            
+        });
+       }
+       else 
+       {
+            res.send({
+             message:'data not found'
+        })
+      }
+    
+    });
+       
+})
